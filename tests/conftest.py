@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 import pytest
 
-from tests.random_files import generate_random_files_tree
+from random_files import generate_random_files_tree
 
 
 @pytest.fixture

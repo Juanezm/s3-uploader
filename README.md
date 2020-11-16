@@ -41,6 +41,32 @@ cd s3-uploader
 pip install .
 ```
 
+## Testing
+Different unit, integration and e2e tests have been provided to ensure the tool meet the requirements listed above. 
+To execute them (recommended use of virtual environment):
+```
+> python3 -m venv venv
+> source venv/bin/activate
+> pip install .
+> python -m pytest tests -v
+========================================================================================================================== test session starts ==========================================================================================================================
+platform darwin -- Python 3.8.6, pytest-6.1.2, py-1.9.0, pluggy-0.13.1 -- /Users/juanezm/Github/s3-uploader/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/juanezm/Github/s3-uploader/tests, configfile: pytest.ini
+collected 7 items                                                                                                                                                                                                                                                       
+
+tests/e2e/test_cli.py::test_main PASSED                                                                                                                                                                                                                           [ 14%]
+tests/integration/test_load_configuration.py::test_load_config_file PASSED                                                                                                                                                                                        [ 28%]
+tests/integration/test_load_configuration.py::test_get_aws_config PASSED                                                                                                                                                                                          [ 42%]
+tests/unit/test_operations.py::test_upload_file_to_s3 PASSED                                                                                                                                                                                                      [ 57%]
+tests/unit/test_operations.py::test_generate_object_name PASSED                                                                                                                                                                                                   [ 71%]
+tests/unit/test_operations.py::test_check_dat_files_in_dir PASSED                                                                                                                                                                                                 [ 85%]
+tests/unit/test_operations.py::test_delete_uploaded_dat_files_from_disk PASSED                                                                                                                                                                                    [100%]
+
+========================================================================================================================== 7 passed in 16.54s ===========================================================================================================================
+```
+
+
 ## Usage
 The CLI tool can be invoked using ```s3-uploader-cli```:
 ```
@@ -82,3 +108,20 @@ An execution example with incorrect credentials:
 2020-11-15 20:24:09,690 - WARNING - Failed to upload /base_dir/bathroom/2020/13/29/10/38-topic.dat to bucket/bathroom/2020/13/29/10/38-topic.dat: An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The AWS Access Key Id you provided does not exist in our records.
 2020-11-15 20:24:10,713 - WARNING - Failed to upload /base_dir/kitchen/2020/13/29/6/54-topic.dat to bucket/kitchen/2020/13/29/6/54-topic.dat: An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The AWS Access Key Id you provided does not exist in our records.
 ```
+
+## Deployment
+If we want this tool to be executed every certain amount of time we can add it as a cron job.
+
+To edit crontab file
+```
+> crontab -e
+```
+
+Insert the cron job below if you would like to run it every minute:
+```
+*/1 * * * * /usr/local/bin/s3-uploader-cli /path/to/config.json
+```
+
+## Further improvements
+- [ ] Add persistence to store uploaded files, to list them if necessary without using AWS.
+- [ ] Add a clean up function to delete tree of empty folders after deleting file from disk.

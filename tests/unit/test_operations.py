@@ -41,14 +41,4 @@ def test_delete_uploaded_dat_files_from_disk(test_base_directory):
     uploaded_files = files[:random.randint(1, number_new_files)]
     delete_uploaded_dat_files_from_disk(uploaded_files)
     files_after_delete = [str(x) for x in Path(base_directory).glob('**/*.dat') if x.is_file()]
-    assert list(set(files) - set(uploaded_files)) == files_after_delete
-
-
-def test_delete_empty_folders_in_dir(test_base_directory):
-    base_directory, number_new_files = test_base_directory
-    # Delete all files in base_directory
-    for file in [x for x in Path(base_directory).glob('**/*.dat') if x.is_file()]:
-        file.unlink()
-    delete_empty_folders_in_dir(directory=base_directory)
-    bdir = Path(base_directory)
-    assert True
+    assert sorted(list(set(files) - set(uploaded_files))) == sorted(files_after_delete)
